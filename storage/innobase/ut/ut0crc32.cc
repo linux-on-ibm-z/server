@@ -187,6 +187,10 @@ ut_cpuid(
 	}
 }
 
+#ifndef _MSC_VER
+#include <nmmintrin.h>
+#endif
+
 /** Calculate CRC32 over 8-bit data using a hardware/CPU instruction.
 @param[in,out]	crc	crc32 checksum so far when this function is called,
 when the function ends it will contain the new checksum
@@ -200,11 +204,7 @@ ut_crc32_8_hw(
 	const byte**	data,
 	ulint*		len)
 {
-#ifdef _MSC_VER
 	*crc = _mm_crc32_u8(*crc, (*data)[0]);
-#else
-	*crc = __builtin_ia32_crc32qi(*crc, (*data)[0]);
-#endif
 
 	(*data)++;
 	(*len)--;
@@ -220,20 +220,7 @@ ut_crc32_64_low_hw(
 	uint32_t	crc,
 	uint64_t	data)
 {
-#ifdef _MSC_VER
-	uint64_t	crc_64bit = crc;
-#ifdef _M_X64
-	crc_64bit = _mm_crc32_u64(crc_64bit, data);
-#elif defined(_M_IX86)
-	crc = _mm_crc32_u32(crc, static_cast<uint32_t>(data));
-	crc_64bit = _mm_crc32_u32(crc, static_cast<uint32_t>(data >> 32));
-#else
-#error Not Supported processors type.
-#endif
-	return(static_cast<uint32_t>(crc_64bit));
-#else
-	return static_cast<uint32_t>(__builtin_ia32_crc32di(crc, data));
-#endif
+	return static_cast<uint32_t>(_mm_crc32_u64(crc, data));
 }
 
 /** Calculate CRC32 over 64-bit byte string using a hardware/CPU instruction.
