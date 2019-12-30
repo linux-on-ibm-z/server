@@ -1912,6 +1912,8 @@ bool open_table(THD *thd, TABLE_LIST *table_list, Open_table_context *ot_ctx)
     mdl_ticket= table_list->mdl_request.ticket;
   }
 
+retry_share:
+
   if (table_list->open_strategy == TABLE_LIST::OPEN_IF_EXISTS)
   {
     if (!ha_table_exists(thd, &table_list->db, &table_list->table_name))
@@ -1928,8 +1930,6 @@ bool open_table(THD *thd, TABLE_LIST *table_list, Open_table_context *ot_ctx)
     gts_flags= GTS_VIEW;
   else
     gts_flags= GTS_TABLE | GTS_VIEW;
-
-retry_share:
 
   share= tdc_acquire_share(thd, table_list, gts_flags, &table);
 
@@ -1998,6 +1998,16 @@ retry_share:
     DBUG_ASSERT(table_list->view);
 
     DBUG_RETURN(FALSE);
+  }
+
+  if (table && table->file->discover_check_version())
+  {
+    DBUG_PRINT("error", ("discover_check_version failed"));
+    /*
+      Table definition is out of sync
+      Close all instances of the table and retry
+    */
+    share->tdc->flushed= 1;
   }
 
   if (!(flags & MYSQL_OPEN_IGNORE_FLUSH))
