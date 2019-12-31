@@ -1949,6 +1949,8 @@ int my_b_flush_io_cache(IO_CACHE *info, int need_append_buffer_lock)
         int res= info->write_function(info, info->write_buffer, length);
         if (res)
           DBUG_RETURN(res);
+        else
+          info->error= 0;
 
         set_if_bigger(info->end_of_file, info->pos_in_file);
       }
