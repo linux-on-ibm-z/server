@@ -165,7 +165,8 @@ addons:
       - libjemalloc-dev
       - libsnappy-dev
       - liblzma-dev
-      - libzmq-dev
+ #s390x-bio         - libzmq-dev
+      - libzmq3-dev
       - uuid-dev
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
