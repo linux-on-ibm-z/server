@@ -84,7 +84,8 @@ matrix:
             - libjemalloc-dev
             - libsnappy-dev
             - liblzma-dev
-            - libzmq-dev
+   #s390x-bio         - libzmq-dev
+            - libzmq3-dev
             - libdistro-info-perl
             - uuid-dev
             - devscripts
@@ -134,8 +135,8 @@ addons:
       - g++-8
       - clang-6.0
       - llvm-6.0-dev
-        #s390x      - clang-7
-        #s390x      - llvm-7-dev
+      - clang-7
+      - llvm-7-dev
       - bison
       - chrpath
       - cmake
