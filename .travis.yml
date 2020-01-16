@@ -91,10 +91,9 @@ matrix:
       script:
         - ${CC} --version ; ${CXX} --version
         - env DEB_BUILD_OPTIONS="parallel=4" debian/autobake-deb.sh;
-	  include:
     - os: linux
-	  arch: s390x
-	  dist: bionic
+      arch: s390x
+      dist: bionic
       compiler: gcc
       env:
         - DebPackages
@@ -235,7 +234,7 @@ matrix:
             - galera-3
             - libzmq3-dev		
     - os: osx
-	
+
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == 'osx' ]]; then
       brew update;
