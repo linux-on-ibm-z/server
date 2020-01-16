@@ -80,9 +80,7 @@ matrix:
             - galera-3
             - libzmq3-dev
     - os: osx
-
 osx_image: xcode10.1
-
 compiler:
   - gcc
   - clang
