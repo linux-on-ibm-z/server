@@ -61,6 +61,7 @@ addons:
 
 matrix:
   include:
+    - os: osx
     - os: linux
       addons:
         apt:
@@ -69,7 +70,6 @@ matrix:
             - *common-packages 
             - galera-4
             - libzmq-dev
-    - os: osx
     - os: linux
       arch: s390x
       dist: bionic
