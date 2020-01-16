@@ -70,6 +70,16 @@ matrix:
             - galera-4
             - libzmq-dev
     - os: osx
+    - os: linux
+      arch: s390x
+      dist: bionic
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages 
+            - galera-3
+            - libzmq3-dev
 osx_image: xcode10.1
 compiler:
   - gcc
