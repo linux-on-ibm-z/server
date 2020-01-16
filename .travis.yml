@@ -68,7 +68,8 @@ matrix:
           packages: 
             - *common-packages 
             - galera-4
-            - libzmq-dev		          
+            - libzmq-dev
+			
     - os: linux
       arch: s390x
       dist: bionic
@@ -78,7 +79,8 @@ matrix:
           packages: 
             - *common-packages 
             - galera-3
-            - libzmq3-dev		
+            - libzmq3-dev
+			
     - os: osx
 osx_image: xcode10.1
 
