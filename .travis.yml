@@ -11,13 +11,14 @@ language: cpp
 
 addons:
   apt:
-    sources: 
+    sources: &add-sources
       - ubuntu-toolchain-r-test
       - llvm-toolchain-xenial-6.0
       - llvm-toolchain-xenial-7
       - sourceline: 'deb [arch=amd64,arm64,i386,ppc64el] http://ftp.osuosl.org/pub/mariadb/repo/10.4/ubuntu xenial main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?search=0xF1656F24C74CD1D8&op=get'
-    packages: # make sure these include all compilers and all build dependencies (see list above)
+    packages: &common-packages 
+      # make sure these include all compilers and all build dependencies (see list above)
       - gcc-6
       - g++-6
       - gcc-7
@@ -57,8 +58,6 @@ addons:
       - uuid-dev
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
-
-
 
 osx_image: xcode10.1
 compiler:
@@ -193,6 +192,25 @@ matrix:
       script:
         - ${CC} --version ; ${CXX} --version
         - env DEB_BUILD_OPTIONS="parallel=4" debian/autobake-deb.sh;
+    - os: linux
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages 
+            - galera-4
+            - libzmq-dev
+    - os: linux
+      arch: s390x
+      dist: bionic
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages 
+            - galera-3
+            - libzmq3-dev
+    - os: osx
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
     - os: osx
@@ -214,28 +232,6 @@ matrix:
       compiler: clang
       env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
 
-matrix:
-  include:
-    - os: osx
-    - os: linux
-      addons:
-        apt:
-          sources: 
-            - ubuntu-toolchain-r-test
-          packages:  
-            - galera-4
-            - libzmq-dev
-    - os: linux
-      arch: s390x
-      dist: bionic
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages: 
-            - galera-3
-            - libzmq3-dev
-            
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == 'osx' ]]; then
       brew update;
