@@ -58,27 +58,7 @@ addons:
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
 
-matrix:
-  include:
-    - os: osx
-    - os: linux
-      addons:
-        apt:
-          sources: 
-            - ubuntu-toolchain-r-test
-          packages:  
-            - galera-4
-            - libzmq-dev
-    - os: linux
-      arch: s390x
-      dist: bionic
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages: 
-            - galera-3
-            - libzmq3-dev
+
 
 osx_image: xcode10.1
 compiler:
@@ -234,6 +214,28 @@ matrix:
       compiler: clang
       env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
 
+matrix:
+  include:
+    - os: osx
+    - os: linux
+      addons:
+        apt:
+          sources: 
+            - ubuntu-toolchain-r-test
+          packages:  
+            - galera-4
+            - libzmq-dev
+    - os: linux
+      arch: s390x
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages: 
+            - galera-3
+            - libzmq3-dev
+            
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == 'osx' ]]; then
       brew update;
