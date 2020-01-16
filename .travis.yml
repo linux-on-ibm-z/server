@@ -11,14 +11,13 @@ language: cpp
 
 addons:
   apt:
-    sources: &add-sources
+    sources: 
       - ubuntu-toolchain-r-test
       - llvm-toolchain-xenial-6.0
       - llvm-toolchain-xenial-7
       - sourceline: 'deb [arch=amd64,arm64,i386,ppc64el] http://ftp.osuosl.org/pub/mariadb/repo/10.4/ubuntu xenial main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?search=0xF1656F24C74CD1D8&op=get'
-    packages: &common-packages 
-      # make sure these include all compilers and all build dependencies (see list above)
+    packages: # make sure these include all compilers and all build dependencies (see list above)
       - gcc-6
       - g++-6
       - gcc-7
@@ -62,6 +61,24 @@ addons:
 matrix:
   include:
     - os: osx
+    - os: linux
+      addons:
+        apt:
+          sources: 
+            - ubuntu-toolchain-r-test
+          packages:  
+            - galera-4
+            - libzmq-dev
+    - os: linux
+      arch: s390x
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages: 
+            - galera-3
+            - libzmq3-dev
 
 osx_image: xcode10.1
 compiler:
