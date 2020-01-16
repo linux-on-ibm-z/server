@@ -1,19 +1,14 @@
 # vim ft=yaml
 # travis-ci.org definition
-branches: 
-  only: 
-    - 10.5-travis
+
 sudo: false
-dist: bionic
+dist: xenial
 
 git:
   depth: 2
 
 language: cpp
-os:
-  - linux
-    #  - osx
-arch: s390x
+
 osx_image: xcode10.1
 compiler:
   - gcc
@@ -84,7 +79,58 @@ matrix:
             - libjemalloc-dev
             - libsnappy-dev
             - liblzma-dev
-   #s390x-bio         - libzmq-dev
+            - libzmq-dev
+            - libdistro-info-perl
+            - uuid-dev
+            - devscripts
+            - fakeroot
+            - dh-systemd
+            - libsystemd-dev
+            - libzstd-dev
+            - unixodbc-dev
+      script:
+        - ${CC} --version ; ${CXX} --version
+        - env DEB_BUILD_OPTIONS="parallel=4" debian/autobake-deb.sh;
+	  include:
+    - os: linux
+	  arch: s390x
+	  dist: bionic
+      compiler: gcc
+      env:
+        - DebPackages
+      addons:
+        apt:
+          packages: # make sure these match debian/control contents
+            - bison
+            - chrpath
+            - cmake
+            - debhelper
+            - dh-apparmor
+            - dpatch
+            - gdb
+            - libaio-dev
+            - libboost-dev
+            - libcurl3-dev
+            - libdbd-mysql
+            - libjudy-dev
+            - libncurses5-dev
+            - libpam0g-dev
+            - libpcre3-dev
+            - libreadline-gplv2-dev
+            - libstemmer-dev
+            - libssl-dev
+            - libnuma-dev
+            - libxml2-dev
+            - lsb-release
+            - perl
+            - po-debconf
+            - psmisc
+            - zlib1g-dev
+            - libcrack2-dev
+            - cracklib-runtime
+            - libjemalloc-dev
+            - libsnappy-dev
+            - liblzma-dev
             - libzmq3-dev
             - libdistro-info-perl
             - uuid-dev
@@ -120,13 +166,14 @@ matrix:
 
 addons:
   apt:
-    sources:
+    sources: &add-sources
       - ubuntu-toolchain-r-test
       - llvm-toolchain-xenial-6.0
       - llvm-toolchain-xenial-7
       - sourceline: 'deb [arch=amd64,arm64,i386,ppc64el] http://ftp.osuosl.org/pub/mariadb/repo/10.4/ubuntu xenial main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?search=0xF1656F24C74CD1D8&op=get'
-    packages: # make sure these include all compilers and all build dependencies (see list above)
+    packages: &common-packages 
+      # make sure these include all compilers and all build dependencies (see list above)
       - gcc-6
       - g++-6
       - gcc-7
@@ -141,8 +188,6 @@ addons:
       - chrpath
       - cmake
       - gdb
-        #s390x      - galera-4
-      - galera-3
       - libaio-dev
       - libboost-dev
       - libcurl3-dev
@@ -165,12 +210,32 @@ addons:
       - libjemalloc-dev
       - libsnappy-dev
       - liblzma-dev
- #s390x-bio         - libzmq-dev
-      - libzmq3-dev
       - uuid-dev
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
 
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages 
+            - galera-4
+            - libzmq-dev		          
+    - os: linux
+      arch: s390x
+      dist: bionic
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages 
+            - galera-3
+            - libzmq3-dev		
+    - os: osx
+	
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == 'osx' ]]; then
       brew update;
