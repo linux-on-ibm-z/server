@@ -217,11 +217,7 @@ matrix:
             - *common-packages
             - galera-3
             - libzmq3-dev 
-    - os: linux
-      arch: s390x
-      dist: bionic
-      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=archive,optimizer_unfixed_bugs,parts,sys_vars,unit,vcol,innodb,innodb_gis,innodb_zip,innodb_fts
-      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+
 
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
