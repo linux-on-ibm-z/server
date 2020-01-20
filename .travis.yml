@@ -203,6 +203,13 @@ matrix:
       dist: bionic
       compiler: gcc
       env: CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
+      addons:
+        apt:
+          sources: *add-sources
+          packages: 
+            - *common-packages
+            - galera-3
+            - libzmq3-dev 
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
     - os: osx
