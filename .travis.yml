@@ -54,7 +54,6 @@ addons:
       - chrpath
       - cmake
       - gdb
-#      - galera-4
       - libaio-dev
       - libboost-dev
       - libcurl3-dev
@@ -77,7 +76,6 @@ addons:
       - libjemalloc-dev
       - libsnappy-dev
       - liblzma-dev
-#      - libzmq-dev
       - uuid-dev
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
@@ -369,15 +367,6 @@ matrix:
       arch: s390x
       dist: bionic	
       compiler: clang
-      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rpl
-      addons: 
-        apt:
-          sources: *add-sources
-          packages: [ *common-packages, galera-3, libzmq3-dev]
-    - os: linux
-      arch: s390x
-      dist: bionic	
-      compiler: clang
       env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=binlog,binlog_encryption,encryption
       addons: 
         apt:
@@ -401,15 +390,6 @@ matrix:
         apt:
           sources: *add-sources
           packages: [ *common-packages, galera-3, libzmq3-dev]  
-    - os: linux
-      arch: s390x
-      dist: bionic	
-      compiler: clang
-      env: CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
-      addons: 
-        apt:
-          sources: *add-sources
-          packages: [ *common-packages, galera-3, libzmq3-dev]
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
     - os: osx
