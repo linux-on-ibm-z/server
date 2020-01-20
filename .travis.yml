@@ -8,7 +8,10 @@ git:
   depth: 2
 
 language: cpp
-
+os:
+  - linux
+  - osx
+  
 addons:
   apt:
     sources: &add-sources
@@ -179,6 +182,7 @@ matrix:
             - cracklib-runtime
             - libjemalloc-dev
             - libsnappy-dev
+            - galera-3
             - liblzma-dev
             - libzmq3-dev
             - libdistro-info-perl
@@ -193,24 +197,42 @@ matrix:
         - ${CC} --version ; ${CXX} --version
         - env DEB_BUILD_OPTIONS="parallel=4" debian/autobake-deb.sh;
     - os: linux
-      addons:
-        apt:
-          sources: *add-sources
-          packages: 
-            - *common-packages 
-            - galera-4
-            - libzmq-dev
+      addons: {apt: {packages: [*common-packages,galera-4,libzmq-dev], sources: [*add-sources]}}
     - os: linux
       arch: s390x
       dist: bionic
-      addons:
-        apt:
-          sources: *add-sources
-          packages: 
-            - *common-packages 
-            - galera-3
-            - libzmq3-dev
-    - os: osx
+      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=archive,optimizer_unfixed_bugs,parts,sys_vars,unit,vcol,innodb,innodb_gis,innodb_zip,innodb_fts
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rpl
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=binlog,binlog_encryption,encryption
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rocksdb,versioning
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
+    - os: linux
+      arch: s390x
+      dist: bionic
+      env: CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
+      addons: {apt: {packages: [*common-packages,galera-3,libzmq3-dev], sources: [*add-sources]}}
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
     - os: osx
