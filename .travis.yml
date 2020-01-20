@@ -11,7 +11,27 @@ language: cpp
 os:
   - linux
   - osx
-  
+osx_image: xcode10.1
+compiler:
+  - gcc
+  - clang
+
+cache:
+  timeout: 500
+  apt: true
+  ccache: true
+  directories:
+    - /usr/local/Cellar # Fails do to permission error: https://github.com/travis-ci/travis-ci/issues/8092
+
+env:
+  matrix:
+    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
+    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=archive,optimizer_unfixed_bugs,parts,sys_vars,unit,vcol,innodb,innodb_gis,innodb_zip,innodb_fts
+    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rpl
+    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=binlog,binlog_encryption,encryption
+    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rocksdb,versioning
+    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
+    - CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
 addons:
   apt:
     sources: &add-sources
@@ -36,6 +56,7 @@ addons:
       - chrpath
       - cmake
       - gdb
+#      - galera-4
       - libaio-dev
       - libboost-dev
       - libcurl3-dev
@@ -58,31 +79,11 @@ addons:
       - libjemalloc-dev
       - libsnappy-dev
       - liblzma-dev
+#      - libzmq-dev
       - uuid-dev
 
 # libsystemd-daemon-dev # https://github.com/travis-ci/apt-package-whitelist/issues/3882
 
-osx_image: xcode10.1
-compiler:
-  - gcc
-  - clang
-
-cache:
-  timeout: 500
-  apt: true
-  ccache: true
-  directories:
-    - /usr/local/Cellar # Fails do to permission error: https://github.com/travis-ci/travis-ci/issues/8092
-
-env:
-  matrix:
-    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
-    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=archive,optimizer_unfixed_bugs,parts,sys_vars,unit,vcol,innodb,innodb_gis,innodb_zip,innodb_fts
-    - CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rpl
-    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=binlog,binlog_encryption,encryption
-    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=rocksdb,versioning
-    - CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
-    - CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
 
 matrix:
   exclude:
@@ -204,11 +205,12 @@ matrix:
           packages: 
             - *common-packages
             - galera-4
-            - libzmq-dev          
+            - libzmq-dev 
     - os: linux
       arch: s390x
       dist: bionic
-      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
+      compiler: gcc
+      env: CC_VERSION=8 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
       addons:
         apt:
           sources: 
@@ -217,8 +219,6 @@ matrix:
             - *common-packages
             - galera-3
             - libzmq3-dev 
-
-
   # Until OSX becomes a bit more stable: MDEV-12435 MDEV-16213
   allow_failures:
     - os: osx
@@ -239,6 +239,7 @@ matrix:
     - os: osx
       compiler: clang
       env: CC_VERSION=7 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=csv,federated,funcs_1,funcs_2,gcol,handler,heap,json,maria,perfschema,plugins,multi_source,roles
+
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == 'osx' ]]; then
