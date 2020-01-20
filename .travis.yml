@@ -196,13 +196,11 @@ matrix:
         - ${CC} --version ; ${CXX} --version
         - env DEB_BUILD_OPTIONS="parallel=4" debian/autobake-deb.sh;
     - os: linux
-      addons: {apt: {packages: [*common-packages,galera-4,libzmq-dev], sources: [*add-sources]}}
-#        apt:
-#          sources: *add-sources
-#          packages: 
-#            - *common-packages
-#            - galera-4
-#            - libzmq-dev
+      addons: 
+        apt:
+          sources: *add-sources
+          packages: [ *common-packages, galera-4, libzmq-dev]
+
     - os: linux
       arch: s390x
       dist: bionic
