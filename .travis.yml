@@ -8,9 +8,7 @@ git:
   depth: 2
 
 language: cpp
-os:
-  - linux
-  - osx
+os: osx
 osx_image: xcode10.1
 compiler:
   - gcc
