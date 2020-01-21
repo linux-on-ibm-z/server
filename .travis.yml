@@ -349,15 +349,6 @@ matrix:
       arch: s390x
       dist: bionic	
       compiler: clang
-      env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=main
-      addons: 
-        apt:
-          sources: *add-sources
-          packages: [ *common-packages, galera-3, libzmq3-dev]
-    - os: linux
-      arch: s390x
-      dist: bionic	
-      compiler: clang
       env: CC_VERSION=6 TYPE=RelWithDebInfo MYSQL_TEST_SUITES=archive,optimizer_unfixed_bugs,parts,sys_vars,unit,vcol,innodb,innodb_gis,innodb_zip,innodb_fts
       addons: 
         apt:
